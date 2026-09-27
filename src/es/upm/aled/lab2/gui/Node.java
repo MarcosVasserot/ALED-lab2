@@ -11,6 +11,7 @@ import java.util.List;
  * 
  * @author rgarciacarmona
  */
+//commit   
 public class Node {
 	private double x, y;
 	private List<Node> children;
@@ -53,6 +54,8 @@ public class Node {
 	 */
 	public List<Node> getChildren() {
 		return children;
+		
+	
 	}
 
 	/**
