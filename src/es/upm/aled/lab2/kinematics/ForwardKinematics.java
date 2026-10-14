@@ -28,19 +28,33 @@ public class ForwardKinematics {
 	public static Node computePositions(Segment root, double originX, double originY) {
 		// TODO: Implemente este método
 		
-		return computePositions(root, originX,originY,0);	
+		return computePositions(root, originX, originY, 0.0);	
 	}
 
 	// Private helper method that implements the recursive algorithm
 	private static Node computePositions(Segment link, double baseX, double baseY, double accumulatedAngle) {
 		// TODO: Implemente este método
 		
-		accumulatedAngle += link.getAngle();
-		for (int i = 0; i < link.getChildren().size(); i++){
-				double x =baseX + link.getLength()*Math.cos(accumulatedAngle); 
-				double y =baseX + link.getLength()*Math.sin(accumulatedAngle); 
-				Node n = new Node(x,y); 
-				return n;
+		long startTime = System.nanoTime(); 
+		accumulatedAngle += link.getAngle(); //Al ángulo acumulado le sumo el ángulo del segmento actual 
+		double x = baseX + link.getLength()*Math.cos(accumulatedAngle); //Obtengo la coordenada x del nuevo nodo con la fórmula que nos dan 
+		double y = baseY + link.getLength()*Math.sin(accumulatedAngle); //Obtengo la coordenada y del nuevo nodo con la fórmula que nos dan 
+		Node node = new Node(x, y); //Creo el nodo con las coordenadas x e y que acabo de calcular
+		
+		if (link.getChildren().isEmpty()) { //Si el segmento no tiene hiios simplemente devuelve el nodo y se acaba el método 
+			long runningTime = System.nanoTime()- startTime;
+			System.out.println("Tiempo de computePositions para un segmento con "
+			+ link.getChildren().size() + " hijos: "
+			+ runningTime + " nanosegundos");
+			return node; 
+		}
+		//Si tiene hijos 
+		for (Segment child: link.getChildren()  )//A cada segmento link le pido su colección de segmentos hijos y la recorro con un bucle for 
+		node.addChild(computePositions(child, x, y, accumulatedAngle)); //Le pido a cada uno de los segmentos hijos que convierta a nodo el punto al que llegue y los añada como hijos del nodo que yo estoy fabricando.   
+		long runningTime = System.nanoTime()- startTime;
+		System.out.println("Tiempo de computePositions para un segmento con "
+		+ link.getChildren().size() + " hijos: "
+		+ runningTime + " nanosegundos");
+		return node ;
 		}
 	}
-}
